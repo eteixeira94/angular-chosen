@@ -27,6 +27,17 @@
                     no_results_text: attrs.noResultsText? attrs.noResultsText: ''
                 });
 
+                var chosen = element.data('chosen');
+
+                chosen.dropdown.find('input').on('keyup', function(e)
+                {
+                    if (chosen.dropdown.find('li.no-results'))
+                    {
+                        var divNoResult = element.next().children('.chosen-drop').children('.chosen-results').children('.no-results');
+                        divNoResult.html(divNoResult.html().replace(/[\\"]/g, ''));
+                    }
+                });
+
                 element.on('change', function () {
                     element.trigger('chosen:updated');
                 });
@@ -80,7 +91,7 @@
                         element.on(event[eventNameAlias], function (event) {
                             elementCurrent.unbind('click');
                             elementCurrent.bind("click", function(){
-                              var resultText = this.children[0].children[0].innerText;
+                              var resultText = $(this.children[0]).children('span').text();
 
                                 scope.$apply(function () {
                                     scope[eventNameAlias](scope.action, resultText);
