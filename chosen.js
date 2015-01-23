@@ -43,7 +43,7 @@
                                      var children = element.children();
                                      angular.forEach(children, function(value, key) {
                                           $(value).removeAttr('selected');
-                                          if($(value).attr('value') == scope.ngModel.id){
+                                          if($(value).attr('value') == scope.ngModel[!attrs.searchActiveName?'id':attrs.searchActiveName]){
                                               $(value).attr('selected','selected');
                                           }
                                       });
