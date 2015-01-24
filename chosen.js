@@ -69,11 +69,7 @@
 
                                      elementNext.unbind('click');
                                      elementNext.bind("click", function(){
-                                        if (elementNext.hasClass('chosen-with-drop')) {
-                                          elementNext.removeClass('chosen-with-drop');
-                                        } else {
-                                          elementNext.addClass('chosen-with-drop');
-                                        }
+                                        element.trigger('chosen:updated');
                                      });
                                 });
                               });
