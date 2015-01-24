@@ -31,10 +31,11 @@
 
                 chosen.dropdown.find('input').on('keyup', function(e)
                 {
-                    if (chosen.dropdown.find('li.no-results'))
+                    if (chosen.dropdown.find('li.no-results').length > 0)
                     {
                         var divNoResult = element.next().children('.chosen-drop').children('.chosen-results').children('.no-results');
                         divNoResult.html(divNoResult.html().replace(/[\\"]/g, ''));
+                        scope.ngModel = {};
                     }
                 });
 
@@ -42,11 +43,14 @@
                     element.trigger('chosen:updated');
                 });
 
+                var thisActive = '';
+
                 scope.$watch('[' + watchCollection.join(',') + ']', function () {
                   otherVal = element.next().children('div').children('.chosen-search').children('input').val();
-                  if (otherVal !== '') {
+                  if (otherVal !== '' || thisActive !== '') {
+                      thisActive = otherVal!==''? otherVal: thisActive;
                       angular.forEach(scope.options, function(value, key) {
-                          if (value.name === otherVal) {
+                          if (value.name === thisActive) {
                               setTimeout(function() {
                                 scope.$apply(function() {
                                      scope.ngModel = value;
@@ -56,6 +60,7 @@
                                           $(value).removeAttr('selected');
                                           if($(value).attr('value') == scope.ngModel[!attrs.searchActiveName?'id':attrs.searchActiveName]){
                                               $(value).attr('selected','selected');
+                                              thisActive = '';
                                           }
                                       });
 
@@ -91,10 +96,11 @@
                         element.on(event[eventNameAlias], function (event) {
                             elementCurrent.unbind('click');
                             elementCurrent.bind("click", function(){
-                              var resultText = $(this.children[0]).children('span').text();
-
+                                var resultText = $(this.children[0]).children('span').text();
+                                scope.ngModel = scope.ngModel? scope.ngModel : {};
+                                scope.ngModel.name = resultText;
                                 scope.$apply(function () {
-                                    scope[eventNameAlias](scope.action, resultText);
+                                    scope[eventNameAlias](scope.action, scope.ngModel);
                                 });
                             });
                         });
